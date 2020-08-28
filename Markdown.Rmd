@@ -1,0 +1,439 @@
+---
+title: "Tobacco Use and Obesity Rates"
+author: "Adrian de Vos"
+date: "12/9/2016"
+output: pdf_document
+---
+
+![](cigarette.jpg)
+\newpage
+
+```{r ,include = FALSE, cache=TRUE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo=TRUE, cache=TRUE, 
+                      fig.width=5, fig.height=5,
+                      fig.align='center')
+
+## indents are for indenting r code as formatted text
+## They may need to be adjusted depending on your OS
+indent1 = '    '
+indent2 = '        '
+indent3 = '            '
+runsoln = FALSE
+library(ggthemes)
+library(dplyr)
+library(data.table)
+library(maps)
+library(ISLR)
+library(class)
+library(data.table)
+library(gridExtra)
+library(xtable)
+library(ggplot2)
+```
+
+```{r, echo=FALSE, indent=indent1, warning=FALSE, message=FALSE}
+library(ggthemes)
+library(dplyr)
+library(data.table)
+library(maps)
+library(ISLR)
+library(class)
+library(data.table)
+library(gridExtra)
+library(xtable)
+library(ggplot2)
+#Read and relabel
+setwd("/Users/adriandevos/Desktop/")
+tobacco = read.csv("tobacco2.csv",na.strings=c("", "NA"), stringsAsFactors = FALSE)  # read csv file 
+
+tobacco$Location.1<- NULL
+Everyday <- tobacco$Smoke.everyday
+Somedays <- tobacco$Smoke.some.days
+Former <- tobacco$Former.smoker
+Never <- tobacco$Never.smoked
+Year <- tobacco$Year
+State <- tobacco$State
+Region<- tobacco$Region
+Obesity_Rate<-tobacco$Rate
+tobacco <- subset(tobacco, tobacco$Year>=2005) 
+
+#Remove special characters
+Never <- as.numeric(substr(tobacco$Never.smoked,0,nchar(tobacco$Never.smoked)-1))
+Everyday <- as.numeric(substr(tobacco$Smoke.everyday,0,nchar(tobacco$Smoke.everyday)-1))
+Somedays <- as.numeric(substr(tobacco$Smoke.some.days,0,nchar(tobacco$Smoke.some.days)-1))
+Former <- as.numeric(substr(tobacco$Former.smoker,0,nchar(tobacco$Former.smoker)-1))
+Obesity_Rate <- as.numeric(substr(tobacco$Rate,0,nchar(tobacco$Rate)-1))
+
+tobacco <- data.frame(Year, Region, State, Obesity_Rate, Everyday, Former, Never, Somedays)
+
+
+
+##Dividing data by region
+Western <- tobacco[grep("Western", tobacco$Region),]
+Eastern <- tobacco[grep("Eastern", tobacco$Region),]
+Midwestern <- tobacco[grep("Midwestern", tobacco$Region),]
+Territory <- tobacco[grep("Territory", tobacco$Region),]
+Southern <- tobacco[grep("Southern", tobacco$Region),]
+Nationwide <- tobacco[grep("National", tobacco$Region),]
+
+
+##Seperate by years
+year2005<- tobacco[grep("2005", tobacco$Year),]
+year2006<- tobacco[grep("2006", tobacco$Year),]
+year2007<- tobacco[grep("2007", tobacco$Year),]
+year2008<- tobacco[grep("2008", tobacco$Year),]
+year2009<- tobacco[grep("2009", tobacco$Year),]
+year2010<- tobacco[grep("2010", tobacco$Year),]
+tobacco <- subset(tobacco, tobacco$Year>=2005)
+
+#Create Obesity Rank Factor Variable
+index <- tobacco$Obesity_Rate
+sorted <-sort(index) # First sort the Crime Rate Values
+Obesity_Rank <- cut(sorted, breaks = 3,labels = FALSE) # Cut the sorted values into 5 different ranks
+
+#Check the ranks
+Obesity_Rank <- factor(Obesity_Rank, levels = 1:3,labels = c("Low","Medium","High"))
+
+tobacco <- data.frame(Year, Region, State,  Obesity_Rate, Obesity_Rank, Everyday, Former, Never, Somedays)
+``` 
+
+#Abstract
+Many people believe smoking can help people lose weight. This perception is based off the fact that nicotine is an appetite suppressant, leading to young adults to start smoking in order to lose weight. This study is intended to explore the relationship between tobacco use and obesity. 
+
+Using multiple models in my experiment to analyze my data, primarily KNN algorithms and K-Means clustering. PCA analysis was a method I initially considered, but the dataset has low dimensions so it is not a necessary model. The primary focus was to see if obesity rates and tobacco use rates were correlated, however I additionally wanted to see if state smoking rates could be clustered by region, as well as by obesity rate ranks. 
+
+The data suggests that tobacco use can affect obesity rates, however believing that smoking protects against, or causes, obesity may be over-simplistic. Quitting smoking may be associated with temporary weight gain, but cannot be concluded to increase obesity rates.
+
+#Introduction
+The rules and regulations surrounding tobacco use in the United States are changing rapidly. Smoking increases the risk of cancer, respiratory diseases, and cardiovascular diseases. California raised the minimum age to purchase tobacco products to 21 on June 9th, 2016 as a measure to decrease tobacco use, and many states are set to follow. Most states see tobacco use as negative as it has been consistently proven to lead to major health problems.
+
+Many smokers want to quit, but a small percentage actually attempt to. The most common reason people fail to quit is because of addiction, however there are other factors contributing to people's inability to quit tobacco use. Weight gain concerns can be a very influential in tobacco use, as tobacco can be used as an appetite suppressant. This perception can be a reason that many people start smoking. Scientifically, tobacco use should lead to less weight gain. Nicotine activates pathways in the brain that suppress appetite, causing smokers to typically weight less than non-smokers. 
+
+The relationship between tobacco use and obesity rates is complicated, but possibly there is a strong correlation between the two. There is evidence that tobacco use can lead to weight gain, but also that quitting tobacco can lead to weight gain. Food begins to lose its taste after smoking for prolonged periods of time. The idea is that when one quits smoking, one will eat a lot more because of the heightened flavors. This is how I based my study. I wanted to see if an increase in number of former smokers increased obesity rates. 
+
+Obesity is also becoming a major public health challenge and its prevalence is increasing worldwide. The definition of obesity can vary, however the CDC defines obesity as having a BMI of 30+.   
+
+The tobacco use data I used was taken from a study done by the Center for Disease and Prevention. It consisted of 877 observations and 7 attributes. Detailing from 1995-2010, it included tobacco use percentages of U.S states and territories: former smokers, everyday smokers, non-smokers, and casual smokers. It also included a longitude/latitude coordinate for each state. I removed this column.
+
+I merged the tobacco use data with a dataset compiled by the State of Obesity, a private organization dedicated to preventing obesity in the United States. This dataset included obesity rate percentages per state/territory from 2005-2010. I had to remove observations from the tobacco data set that were before 2005 so there were no blank values. 
+
+Additionally, I created two factor variables with the state and obesity rate variable for further exploring tobacco and obesity. My final data set consisted of 8 attributes and 335 observations. 
+
+All exploration and analysis was done with RStudio and its included libraries, and compilation of the data was done in Microsoft Excel.
+ 
+
+\newpage
+
+#Exploration
+I first cleaned up the data, eliminating one variable and subsetting the data to after 2005. Additionally, I created a factor variable based off obesity rates.
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+tobacco$Location.1<- NULL
+tobacco <- subset(tobacco, tobacco$Year>=2005) 
+
+#Create Obesity Rank Factor Variable
+index <- tobacco$Obesity_Rate
+sorted <-sort(index) # First sort the Crime Rate Values
+Obesity_Rank <- cut(sorted, breaks = 3,labels = FALSE) # Cut the sorted values into 5 different ranks
+Obesity_Rank <- factor(Obesity_Rank, levels = 1:3,labels = c("Low","Medium","High"))
+```
+
+I first wanted to see if former smoking rates affected obesity rates. My inital hypothesis was that previously smoking would lead to obesity. I explored the data visually.
+
+```{r echo=FALSE, warning=FALSE}
+year2005.plot <- ggplot(year2005, aes(year2005$Former, year2005$Obesity_Rate)) +
+  geom_point(color = "darkblue", size = 1)  + labs(x="Former Smokers (%)", y="Obesity Rate")+
+  ggtitle("2005") + xlim(20, 35) +ylim(20,35) +theme(plot.title = element_text(lineheight=.8, face="bold"))
+
+year2006.plot <- ggplot(year2006, aes(year2006$Former, year2006$Obesity_Rate)) +
+  geom_point(color = "darkblue", size = 1) + labs(x="Former Smokers (%)", y="Obesity Rate")+
+  ggtitle("2006") + xlim(20, 35) +ylim(20,35)+theme(plot.title = element_text(lineheight=.8, face="bold"))
+
+year2007.plot <- ggplot(year2007, aes(year2007$Former, year2007$Obesity_Rate)) +
+  geom_point(color = "darkblue", size = 1) + labs(x="Former Smokers (%)", y="Obesity Rate")+
+  ggtitle("2007") + xlim(20, 35) +ylim(20,35)+theme(plot.title = element_text(lineheight=.8, face="bold"))
+
+year2008.plot <- ggplot(year2008, aes(year2008$Former, year2008$Obesity_Rate)) +
+  geom_point(color = "darkblue", size = 1) + labs(x="Former Smokers (%)", y="Obesity Rate")+
+  ggtitle("2008") + xlim(20, 35) +ylim(20,35)+theme(plot.title = element_text(lineheight=.8, face="bold"))
+
+
+year2009.plot <- ggplot(year2009, aes(year2009$Former, year2009$Obesity_Rate)) +
+  geom_point(color = "dark blue", size = 1) + labs(x="Former Smokers (%)", y="Obesity Rate")+
+  ggtitle("2009") + xlim(20, 35) +ylim(20,35)+theme(plot.title = element_text(lineheight=.8, face="bold"))
+
+year2010.plot <- ggplot(year2010, aes(year2010$Former, year2010$Obesity_Rate)) +
+  geom_point(color = "dark blue", size = 1) + labs(x="Former Smokers (%)", y="Obesity Rate")+
+  ggtitle("2010") + xlim(20, 35) +ylim(20,35) +theme(plot.title = element_text(lineheight=.8, face="bold"))
+
+grid.arrange(year2005.plot,year2006.plot,year2007.plot,year2008.plot,year2009.plot,year2010.plot)
+```
+
+Based on the data, a higher percentage of former smokers leads to a lower percentage of obesity rates. This is the opposite of what I expected when I initally began the study. This supports the hypothesis that tobacco use does prevent weight gain. A conclusion could be based just off of these graphs. However, I wanted to explore the data more.
+
+\newpage
+I then began to think about how tobacco use effects smoking rates by region. I created subsets of the data based off regions of the United States:
+
+```{r, echo=FALSE, warning=FALSE}
+library(ggplot2)
+west.plot <- ggplot(Western, aes(Western$Year, Western$Everyday)) + 
+  labs(x="Year", y="Everyday Smokers (%)")+geom_smooth(method=lm)+
+  geom_point(color = "sienna", size = 1) +
+ggtitle("Western Smokers")
+
+east.plot <- ggplot(Eastern, aes(Eastern$Year, Eastern$Everyday)) +
+  labs(x="Year", y="Everyday Smokers (%)")+geom_smooth(method=lm)+
+  geom_point(color = "darkblue", size = 1) +
+  ggtitle("Eastern Smokers")
+
+south.plot <- ggplot(Southern, aes(Southern$Year, Southern$Everyday)) +
+  labs(x="Year", y="Everyday Smokers (%)")+geom_smooth(method=lm)+
+  geom_point(color = "springgreen4", size = 1) +
+  ggtitle("Southern Smokers")
+
+midwest.plot <- ggplot(Midwestern, aes(Midwestern$Year, Midwestern$Everyday)) +
+  labs(x="Year", y="Everyday Smokers (%)")+geom_smooth(method=lm)+
+  geom_point(color = "gold2", size = 1) +
+  ggtitle("Midwestern Smokers")
+
+territories.plot <- ggplot(Territory, aes(Territory$Everyday, Territory$Never)) +
+  labs(x="Year", y="Everyday Smokers (%)")+geom_smooth(method=lm)+
+  geom_point(color = "purple3", size = 1) +
+  ggtitle("U.S Territory Smokers")
+
+national.plot <- ggplot(Nationwide, aes(Nationwide$Everyday, Nationwide$Never)) +
+  labs(x="Year", y="Everyday Smokers (%)")+geom_smooth(method=lm)+
+  geom_point(color = "red4", size = 1) +
+  ggtitle("National Smokers")
+
+grid.arrange(east.plot, midwest.plot, south.plot, west.plot, territories.plot, national.plot)
+```
+```{r, echo=FALSE, message=FALSE}
+west.plot2 <- ggplot(Western, aes(Western$Year, Western$Obesity_Rate)) + 
+  labs(y="Obesity Rate (%)", x="Smoke Everyday (%)") +  geom_smooth(method=lm)+
+  geom_point(color = "sienna", size = 1) +
+  ggtitle("Western Obesity Rates")
+
+east.plot2 <- ggplot(Eastern, aes(Eastern$Year, Eastern$Obesity_Rate)) + 
+  labs(y="Obesity Rate (%)", x="Smoke Everyday (%)") +  geom_smooth(method=lm)+
+  geom_point(color = "darkblue", size = 1) +
+  ggtitle("Eastern Obesity Rates")
+
+
+south.plot2 <- ggplot(Southern, aes(Southern$Year, Southern$Obesity_Rate)) + 
+  labs(y="Obesity Rate (%)", x="Smoke Everyday (%)") +  geom_smooth(method=lm)+
+  geom_point(color = "springgreen4", size = 1) +
+  ggtitle("Southern Obesity Rates")
+
+
+midwest.plot2 <- ggplot(Midwestern, aes(Midwestern$Year, Midwestern$Obesity_Rate)) + 
+  labs(y="Obesity Rate (%)", x="Smoke Everyday (%)") +  geom_smooth(method=lm)+
+  geom_point(color = "gold2", size = 1) +
+  ggtitle("Midwestern Obesity Rates")
+
+
+territories.plot2 <- ggplot(Territory, aes(Territory$Year, Territory$Obesity_Rate)) + 
+  labs(y="Obesity Rate (%)", x="Smoke Everyday (%)") +  geom_smooth(method=lm)+
+  geom_point(color = "purple3", size = 1) +
+  ggtitle("U.S Territories Obesity Rates")
+
+national.plot2 <- ggplot(Nationwide, aes(Nationwide$Year, Nationwide$Obesity_Rate)) + 
+  labs(y="Obesity Rate (%)", x="Smoke Everyday (%)") +  geom_smooth(method=lm)+
+  geom_point(color = "purple3", size = 1) +
+  ggtitle("National Obesity Rates")
+grid.arrange(east.plot2, midwest.plot2, south.plot2, west.plot2, territories.plot2, national.plot2)
+```
+
+For each region smoking rates are going down, and obesity rates are rising. This counters the hypothesis that smoking leads to weight loss. Perhaps these trends are correlated, however the relationship is much more complicated than initally observed.According to the organization Trust for America's Health, Obesity Rates have been constantly rising in the U.S and have doubled since 1980.
+
+\newpage
+
+#National Data
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+national.plot2 <- ggplot(Nationwide, aes(Nationwide$Year, Nationwide$Never)) +
+  geom_point(color = "red4", size = 1) + geom_smooth(method=lm) +
+  labs(x="Year", y="Never Smoked (%)")+
+  ggtitle("Non-smoker (%) per year")
+
+
+national.plot3 <- ggplot(Nationwide, aes(Nationwide$Year, Nationwide$Everyday)) +
+  geom_point(color = "red4", size = 1) + geom_smooth(method=lm) +
+  labs(x="Year", y="Everyday Smokers (%)")+
+ggtitle("Everyday smoker (%) per year")
+
+
+national.plot4 <- ggplot(Nationwide, aes(Nationwide$Year, Nationwide$Somedays)) +
+  geom_point(color = "red4", size = 1) + geom_smooth(method=lm) +
+  labs(x="Year", y="Casual Smokers (%)")+
+  ggtitle("Casual smokers (%) per year")
+
+national.plot5 <- ggplot(Nationwide, aes(Nationwide$Year, Nationwide$Former)) +
+  geom_point(color = "red4", size = 1) + geom_smooth(method=lm) +
+  labs(x="Year", y="Former-smokers (%)")+
+  ggtitle("Former smoker (%) per year")
+
+
+grid.arrange(national.plot2, national.plot3, national.plot4, national.plot5)
+
+```
+
+These graphs suggest that national tobacco use is going down consistently. 
+
+\newpage
+
+#Exploring yearly data:
+
+
+```{r, echo=FALSE, warning=FALSE}
+tobacco$Year<- as.factor(tobacco$Year)
+lmplot1 <- ggplot(tobacco, aes(tobacco$Everyday, tobacco$Obesity_Rate, group=tobacco$Year,  colour=tobacco$Year)) + labs(x="Everyday Smokers (%)", y="Obesity Rate", colour="Years") +ggtitle("Everyday Smokers")+ stat_smooth(method=lm, se=FALSE) + scale_colour_economist()
+
+lmplot2 <- ggplot(tobacco, aes(tobacco$Never, tobacco$Obesity_Rate, group=tobacco$Year,  colour=tobacco$Year)) + labs(x="Non Smokers (%)", y="Obesity Rate") +ggtitle("Non-Smokers")+ stat_smooth(method=lm, se=FALSE) + scale_colour_economist()
+
+lmplot3 <- ggplot(tobacco, aes(tobacco$Former, tobacco$Obesity_Rate, group=tobacco$Year,  colour=tobacco$Year)) + labs(x="Former Smokers (%)", y="Obesity Rate", colour="Years") +ggtitle("Former Smokers")+ stat_smooth(method=lm, se=FALSE) + scale_colour_economist()
+
+lmplot4 <- ggplot(tobacco, aes(tobacco$Somedays, tobacco$Obesity_Rate, group=tobacco$Year,  colour=tobacco$Year)) + labs(x="Casual Smokers (%)", y="Obesity Rate") +ggtitle("Casual Smokers")+ stat_smooth(method=lm, se=FALSE) + scale_colour_economist()
+
+grid.arrange(lmplot1,lmplot2,lmplot3,lmplot4)
+```
+
+The higher the percentage of former smokers, the lower the obesity rates. This denied my hypothesis that more former smokers would increase obesity rates. All of the yearly trends are consistent for each graph.
+
+However, from 2005-2010, there is a positive correlation between percentage of everyday smokers and obesity rates. Unfortunately, there is also the same correlation between non-smokers and obesity rates. It is possible that the relationship is much more complicated than a direct correlation.
+
+Additionally, obesity rates are rising consistently every year, while smoking rates are declining every year. 
+
+\newpage
+
+
+#K-Means Clustering
+Initially clustering seemed to not be a very effective technique, because the data is very linear. However, I realized I could sort the data effectively into different categories such as Region and Obesity Rank. I defined these factor variables manually. To create a ranking for obesity ranks, I equally seperated the values of obesity into 3 types: Low, Medium, and High. 
+
+In order to create a region variable, I had to manually define every state as Western, Eastern, Midwestern, Southern, or U.S Territory. I chose these classification regions because I thought they would have similar attributes. 
+
+```{r, echo=FALSE}
+index <- tobacco$Obesity_Rate
+sorted <-sort(index) # First sort the Crime Rate Values
+Obesity_Rank <- cut(sorted, breaks = 3,labels = FALSE) # Cut the sorted values into 5 different ranks
+Obesity_Rank<- factor(Obesity_Rank, levels = 1:3,labels = c("Low","Medium","High"))
+tobacco <- data.frame(Year, Region, State, Obesity_Rate, Obesity_Rank, Everyday, Former, Never, Somedays)
+```
+
+```{r echo=FALSE, results="asis"}
+print(xtable(head(tobacco), type = "html"))
+```
+\newpage        
+
+```{r, echo=FALSE, warning=FALSE}
+Tobacco3<- data.frame(tobacco$Somedays, tobacco$Former, tobacco$Everyday, tobacco$Never, tobacco$Obesity_Rank, tobacco$Region)
+tobaccoCluster1 <- kmeans(Tobacco3[, 3:4], 3, nstart = 20) #Obesity Rate 
+tobaccoCluster2 <- kmeans(Tobacco3[, 3:4], 6, nstart = 20) #Obesity Rate 
+
+kmeans_plot1<-ggplot(tobacco, aes(tobacco$Everyday, tobacco$Never, color = tobaccoCluster1$cluster)) + geom_point()
+kmeans_plot2<-ggplot(tobacco, aes(tobacco$Everyday, tobacco$Never, color = tobaccoCluster2$cluster)) + geom_point()
+
+```
+\newpage
+```{r, echo=FALSE}
+orig1 <- ggplot(tobacco, aes(tobacco$Everyday, tobacco$Never, color = Obesity_Rank)) + labs(x="Everyday Smokers (%)", y="Non Smokers")+geom_point()
+orig2 <- ggplot(tobacco, aes(tobacco$Everyday, tobacco$Never, color = Region)) + labs(x="Everyday Smokers (%)", y="Non Smokers")+geom_point()
+
+grid.arrange(kmeans_plot1, orig1, top="Obesity Rank Clustering Comparison")
+```
+
+
+The "low" obesity rank sits in the top right corner with a high percentage of non-smokers and low percentage of everyday smokers. 
+
+The "high" obesity rank sits in the bottom right with a high percentage of everyday smokers and a low percentage of non-somkers. 
+
+The "medium" obesity rank sits somewhere in the middle of these.
+
+This model suggest that high tobacco use leads to high obesity rates. 
+
+Comparing the original plot to the k-means clustered plot, it clustered the 3 Obesity Ranks nicely, but was very diffrent than than the original.
+
+\newpage
+
+```{r, echo=FALSE}
+grid.arrange(kmeans_plot2, orig2, top="Region Clustering Comparison")
+```
+
+This is the attempt to K-Means cluster by region. Unfortunately most of the regional data is very similar, so it can be difficult to cluster. However, it is easy to see that U.S territories have the lowest smoking rates, and the algorithm predicts it correctly.
+
+\newpage
+
+#KNN Testing
+The K-Means model proved to be very useful, however I wanted to try another classification algorithm to predict obesity rate. 
+
+I established an 80% training data set and a 20% test data set and preformed the KNN leave-one-out-cross-validation method. 
+
+I created a function to find a value for k that would minimize the error rate. The K that provided the lowest error rate was 21.
+
+Here is the output for the LOOCV model with the lowest error rate:
+
+```{r echo=FALSE, warning=FALSE}
+train <- sample(1:nrow(tobacco)-1, 267) #Set up the data
+tobacco.train <- tobacco[train,-(1:5)] #Remove year, state,and type variable for train data
+tobacco.test <- tobacco[-train,-(1:5)] #Remove year, state, and type variable for test data
+tobacco.trainLabels <- tobacco[train, 5]
+tobacco.testLabels <- tobacco[-train, 5]
+
+#LOOCV Test
+set.seed(1)
+error2 = NULL #Initialize error variable 
+for (i in 1:(nrow(tobacco.train)-1)) #Create for loop to compute error rate for all values of K
+{ 
+  loocv1 <- knn.cv(train = tobacco.train, cl=tobacco.trainLabels, k=i, prob=FALSE, use.all=TRUE)
+  error2[i] = mean(loocv1 != tobacco.trainLabels)
+}
+
+loocv<- knn.cv(train=tobacco.train, cl=tobacco.trainLabels, k=21, prob=FALSE, use.all=TRUE)
+loocv
+```
+\newpage
+
+
+Unfortunately, the LOOCV method classifies most observations as having a "medium" obesity rate, with a very high error rate regardless of choice of k. This is most likely because most of the data numbers are very close together and the algorithm has a hard time differetiating between them. This proved to not be an effective model.
+
+```{r, echo=FALSE}
+plot(error2, type="l", main="Error rates LOOCV",  ylab="Error Rate", xlab="Number of Ks") #Observe minimum error rate is k=1, however error rates are all very high 
+```
+
+For all k's the error rate was very high.
+
+\newpage
+
+#Conclusion
+After my studies, I can conclude that tobacco use is a factor in increasing obesity rates, however there are many complex causes of increasing obesity rates as well. I tested my original hypothesis that higher percentage of former smokers would lead to higher obesity rates, however I rejected it. 
+
+I then used unsupervised classification techniques such as K-Means clustering and KNN classifications to see if I could create models predicting obesity ranks from smoking habits. My results proved to be successful with K-Means clustering but not with KNN leave-one-out-cross-validation classification. The K-Means model was by far the better model, because it created classifiable data. The KNN model classified everything the same.
+
+The quality of the data could be better. I used to separate datasets and combined them so I expected some inconsistencies. If all of the data I used was from the same source, the results might be a bit more consistent. Also, I was only able to collect state obesity rates for 2005-2010, so I had to resample my data to only 2005-2010 tobacco use rates. There was a strange inconsistency in the data in which Utah was not included for the 1995-1997 data, however it was removed when a resampled my data. 
+ 
+
+
+
+
+
+#References
+  http://www.healthline.com/health-news/aging-heavy-smokers-gain-more-weight-082113#1
+
+  http://www.npr.org/2011/06/09/137085989/the-skinny-on-smoking-why-nicotine-curbs-appetite
+
+  http://stateofobesity.org/adult-obesity
+    
+  http://ajcn.nutrition.org/content/87/4/801.full
+    
+  (http://healthyamericans.org/obesity/)
+  
+  "Introdcution to Data Mining" by Michael Steinbach, Pang-Ning Tan, and Vipin Kumar (2005)
+    
+#Software Used
+
+RStudio:
+https://www.rstudio.com
+
+Microsoft Excel:
+https://products.office.com/en-us/excel
