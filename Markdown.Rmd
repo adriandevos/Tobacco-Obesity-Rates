@@ -2,7 +2,7 @@
 title: "Tobacco Use and Obesity Rates"
 author: "Adrian de Vos"
 date: "12/9/2016"
-output: pdf_document
+output: rmarkdown::github_document
 ---
 
 ![](cigarette.jpg)
