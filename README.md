@@ -17,6 +17,9 @@ Additionally, I created two factor variables with the state and obesity rate var
 All exploration and analysis was done with RStudio and its included libraries, and compilation of the data was done in Microsoft Excel.
 
 ## Exploration
+<details><summary>CLICK ME</summary>
+<p>
+
 ```{r ,include = FALSE, cache=TRUE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo=TRUE, cache=TRUE, 
                       fig.width=5, fig.height=5,
@@ -104,4 +107,6 @@ Obesity_Rank <- cut(sorted, breaks = 3,labels = FALSE) # Cut the sorted values i
 Obesity_Rank <- factor(Obesity_Rank, levels = 1:3,labels = c("Low","Medium","High"))
 
 tobacco <- data.frame(Year, Region, State,  Obesity_Rate, Obesity_Rank, Everyday, Former, Never, Somedays)
+</p>
+</details>
 ``` 
