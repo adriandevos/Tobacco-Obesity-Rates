@@ -17,6 +17,8 @@ Additionally, I created two factor variables with the state and obesity rate var
 All exploration and analysis was done with RStudio and its included libraries, and compilation of the data was done in Microsoft Excel.
 
 ## Exploration
+The data required a full scale scrub and reformatting. I also created a brand new response variable called 'Obesity Rate', which sorted numerical obesity rates into 3 distinct ranks: 'Low', 'Medium', and 'High'.
+
 <details><summary>Data Scrubbing Code</summary>
 <p>
 
