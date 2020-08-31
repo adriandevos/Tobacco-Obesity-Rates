@@ -18,6 +18,17 @@ All exploration and analysis was done with RStudio and its included libraries, a
 
 ## Exploration
 The data required a full scale scrub and reformatting. I also created a brand new response variable called 'Obesity Rate', which sorted numerical obesity rates into 3 distinct ranks: 'Low', 'Medium', and 'High'.
+```
+#Create Obesity Rank Factor Variable
+index <- tobacco$Obesity_Rate
+sorted <-sort(index) # First sort the Obesity Rate Values
+Obesity_Rank <- cut(sorted, breaks = 3,labels = FALSE) # Cut the sorted values into 3 different ranks
+
+#Check the ranks
+Obesity_Rank <- factor(Obesity_Rank, levels = 1:3,labels = c("Low","Medium","High"))
+
+tobacco <- data.frame(Year, Region, State,  Obesity_Rate, Obesity_Rank, Everyday, Former, Never, Somedays)
+```
 
 <details><summary>Data Scrubbing Code</summary>
 <p>
@@ -102,8 +113,8 @@ tobacco <- subset(tobacco, tobacco$Year>=2005)
 
 #Create Obesity Rank Factor Variable
 index <- tobacco$Obesity_Rate
-sorted <-sort(index) # First sort the Crime Rate Values
-Obesity_Rank <- cut(sorted, breaks = 3,labels = FALSE) # Cut the sorted values into 5 different ranks
+sorted <-sort(index) # First sort the Obesity Rate Values
+Obesity_Rank <- cut(sorted, breaks = 3,labels = FALSE) # Cut the sorted values into 3 different ranks
 
 #Check the ranks
 Obesity_Rank <- factor(Obesity_Rank, levels = 1:3,labels = c("Low","Medium","High"))
