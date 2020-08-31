@@ -17,7 +17,7 @@ Additionally, I created two factor variables with the state and obesity rate var
 All exploration and analysis was done with RStudio and its included libraries, and compilation of the data was done in Microsoft Excel.
 
 ## Exploration
-<details><summary>CLICK ME</summary>
+<details><summary>Data Scrubbing Code</summary>
 <p>
 
 ```{r ,include = FALSE, cache=TRUE, message=FALSE, warning=FALSE}
