@@ -34,10 +34,6 @@ tobacco <- data.frame(Year, Region, State,  Obesity_Rate, Obesity_Rank, Everyday
 <p>
 
 ```{r ,include = FALSE, cache=TRUE, message=FALSE, warning=FALSE}
-knitr::opts_chunk$set(echo=TRUE, cache=TRUE, 
-                      fig.width=5, fig.height=5,
-                      fig.align='center')
-
 ## indents are for indenting r code as formatted text
 ## They may need to be adjusted depending on your OS
 indent1 = '    '
@@ -120,9 +116,8 @@ Obesity_Rank <- cut(sorted, breaks = 3,labels = FALSE) # Cut the sorted values i
 Obesity_Rank <- factor(Obesity_Rank, levels = 1:3,labels = c("Low","Medium","High"))
 
 tobacco <- data.frame(Year, Region, State,  Obesity_Rate, Obesity_Rank, Everyday, Former, Never, Somedays)
-</p>
-</details>
 ``` 
+
 I first wanted to see if former smoking rates affected obesity rates. My initial hypothesis was that previously smoking would lead to obesity. I explored the data visually.
 ![](images/yearlyplots.jpeg)
 
