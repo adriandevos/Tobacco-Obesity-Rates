@@ -53,4 +53,3 @@ The higher the percentage of former smokers, the lower the obesity rates. This d
 However, from 2005-2010, there is a positive correlation between percentage of everyday smokers and obesity rates. Unfortunately, there is also the same correlation between non-smokers and obesity rates. It is possible that the relationship is much more complicated than a direct correlation.
 
 Additionally, obesity rates are rising consistently every year, while smoking rates are declining every year. 
-However, from 2005-2010, there is a positive correlation between percentage of everyday smokers and obesity rates. Unfortunately, there is also the same correlation between non-smokers and obesity rates. It is possible that the relationship is much more complicated than a direct correlation.
