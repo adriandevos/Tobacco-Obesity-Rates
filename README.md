@@ -38,4 +38,4 @@ Based on the data, a higher percentage of former smokers leads to a lower percen
 
 I then began to think about how tobacco use effects smoking rates by region. I created subsets of the data based off regions of the United States:
 
-![](images/regional.jpeg)
+![](images/everyday_smokers.jpeg)
