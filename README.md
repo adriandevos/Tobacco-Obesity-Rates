@@ -83,6 +83,6 @@ Comparing the original plot to the k-means clustered plot, it clustered the 3 Ob
 
 <p float="left">
   <img src="images/kmeans_dots2.jpeg" width="400" />
-  <img src="/images/kmeansclusters2.jpeg" width="400" /> 
+  <img src="/images/kmeanscluster2.jpeg" width="400" /> 
 </p>
 
