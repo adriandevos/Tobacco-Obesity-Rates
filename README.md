@@ -66,7 +66,8 @@ Obesity_Rank <- cut(sorted, breaks = 3,labels = FALSE) # Cut the sorted values i
 Obesity_Rank<- factor(Obesity_Rank, levels = 1:3,labels = c("Low","Medium","High"))
 tobacco <- data.frame(Year, Region, State, Obesity_Rate, Obesity_Rank, Everyday, Former, Never, Somedays)
 ```
-![](images/k%20means%20plots.jpeg)
+![](images/kmeans_dots.jpeg) ![](images/kmeans_clusters.jpeg)
+
 
 The "low" obesity rank sits in the top right corner with a high percentage of non-smokers and low percentage of everyday smokers. 
 
