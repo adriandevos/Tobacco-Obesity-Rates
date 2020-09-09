@@ -1,4 +1,5 @@
-# A Study of Tobacco & Obesity-Rates
+# A Study of Tobacco & Obesity Rates
+![](images/cigarette.jpg)
 
 ## Abstract
 Many people believe smoking can help people lose weight. This perception is based off the fact that nicotine is an appetite suppressant, leading to young adults to start smoking in order to lose weight. This study is intended to explore the relationship between tobacco use and obesity.
@@ -121,9 +122,24 @@ Unfortunately, the LOOCV method classifies most observations as having a "medium
   <img src="/images/loocv_error_rates.jpeg" width="431" /> 
 </p>
 
+For all k's the error rate was very high.
+
 ## Conclusion
 After my studies, I can conclude that tobacco use is a factor in increasing obesity rates, however there are many complex causes of increasing obesity rates as well. I tested my original hypothesis that higher percentage of former smokers would lead to higher obesity rates, however I rejected it. 
 
 I then used unsupervised classification techniques such as K-Means clustering and KNN classifications to see if I could create models predicting obesity ranks from smoking habits. My results proved to be successful with K-Means clustering but not with KNN leave-one-out-cross-validation classification. The K-Means model was by far the better model, because it created classifiable data. The KNN model classified everything the same.
 
 The quality of the data could be better. I used to separate datasets and combined them so I expected some inconsistencies. If all of the data I used was from the same source, the results might be a bit more consistent. Also, I was only able to collect state obesity rates for 2005-2010, so I had to resample my data to only 2005-2010 tobacco use rates. There was a strange inconsistency in the data in which Utah was not included for the 1995-1997 data, however it was removed when a resampled my data. 
+
+## References
+  http://www.healthline.com/health-news/aging-heavy-smokers-gain-more-weight-082113#1
+
+  http://www.npr.org/2011/06/09/137085989/the-skinny-on-smoking-why-nicotine-curbs-appetite
+
+  http://stateofobesity.org/adult-obesity
+    
+  http://ajcn.nutrition.org/content/87/4/801.full
+    
+  (http://healthyamericans.org/obesity/)
+  
+  "Introdcution to Data Mining" by Michael Steinbach, Pang-Ning Tan, and Vipin Kumar (2005)
