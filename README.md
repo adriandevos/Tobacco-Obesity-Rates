@@ -114,3 +114,15 @@ for (i in 1:(nrow(tobacco.train)-1)) #Create for loop to compute error rate for 
 }
 loocv<- knn.cv(train=tobacco.train, cl=tobacco.trainLabels, k=21, prob=FALSE, use.all=TRUE)
 ```
+Unfortunately, the LOOCV method classifies most observations as having a "medium" obesity rate, with a very high error rate regardless of choice of k. This is most likely because most of the data numbers are very close together and the algorithm has a hard time differentiating between them. This proved to not be an effective model.
+
+![](/images/knncluster_histogram.jpeg)
+
+![](/images/loocv_error_rates.jpeg)
+
+## Conclusion
+After my studies, I can conclude that tobacco use is a factor in increasing obesity rates, however there are many complex causes of increasing obesity rates as well. I tested my original hypothesis that higher percentage of former smokers would lead to higher obesity rates, however I rejected it. 
+
+I then used unsupervised classification techniques such as K-Means clustering and KNN classifications to see if I could create models predicting obesity ranks from smoking habits. My results proved to be successful with K-Means clustering but not with KNN leave-one-out-cross-validation classification. The K-Means model was by far the better model, because it created classifiable data. The KNN model classified everything the same.
+
+The quality of the data could be better. I used to separate datasets and combined them so I expected some inconsistencies. If all of the data I used was from the same source, the results might be a bit more consistent. Also, I was only able to collect state obesity rates for 2005-2010, so I had to resample my data to only 2005-2010 tobacco use rates. There was a strange inconsistency in the data in which Utah was not included for the 1995-1997 data, however it was removed when a resampled my data. 
