@@ -70,10 +70,12 @@ tobacco <- data.frame(Year, Region, State, Obesity_Rate, Obesity_Rank, Everyday,
 
 The "low" obesity rank sits in the top right corner with a high percentage of non-smokers and low percentage of everyday smokers. 
 
-The "high" obesity rank sits in the bottom right with a high percentage of everyday smokers and a low percentage of non-somkers. 
+The "high" obesity rank sits in the bottom right with a high percentage of everyday smokers and a low percentage of non-smokers. 
 
 The "medium" obesity rank sits somewhere in the middle of these.
 
 This model suggest that high tobacco use leads to high obesity rates. 
 
-Comparing the original plot to the k-means clustered plot, it clustered the 3 Obesity Ranks nicely, but was very diffrent than than the original.
+Comparing the original plot to the k-means clustered plot, it clustered the 3 Obesity Ranks nicely, but was very different than than the original.
+
+
