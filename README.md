@@ -86,3 +86,31 @@ Comparing the original plot to the k-means clustered plot, it clustered the 3 Ob
   <img src="/images/kmeanscluster2.jpeg" width="400" /> 
 </p>
 
+This is the attempt to K-Means cluster by region. Unfortunately most of the regional data is very similar, so it can be difficult to cluster. However, it is easy to see that U.S territories have the lowest smoking rates, and the algorithm predicts it correctly.
+
+## KNN Testing
+The K-Means model proved to be very useful, however I wanted to try another classification algorithm to predict obesity rate. 
+
+I established an 80% training data set and a 20% test data set and preformed the KNN leave-one-out-cross-validation method. 
+
+I created a function to find a value for k that would minimize the error rate. The K that provided the lowest error rate was 21.
+
+Here is the output for the LOOCV model with the lowest error rate:
+
+```{r echo=FALSE, warning=FALSE}
+train <- sample(1:nrow(tobacco)-1, 267) #Set up the data
+tobacco.train <- tobacco[train,-(1:5)] #Remove year, state,and type variable for train data
+tobacco.test <- tobacco[-train,-(1:5)] #Remove year, state, and type variable for test data
+tobacco.trainLabels <- tobacco[train, 5]
+tobacco.testLabels <- tobacco[-train, 5]
+
+#LOOCV Test
+set.seed(1)
+error2 = NULL #Initialize error variable 
+for (i in 1:(nrow(tobacco.train)-1)) #Create for loop to compute error rate for all values of K
+{ 
+  loocv1 <- knn.cv(train = tobacco.train, cl=tobacco.trainLabels, k=i, prob=FALSE, use.all=TRUE)
+  error2[i] = mean(loocv1 != tobacco.trainLabels)
+}
+loocv<- knn.cv(train=tobacco.train, cl=tobacco.trainLabels, k=21, prob=FALSE, use.all=TRUE)
+```
