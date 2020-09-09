@@ -67,8 +67,8 @@ Obesity_Rank<- factor(Obesity_Rank, levels = 1:3,labels = c("Low","Medium","High
 tobacco <- data.frame(Year, Region, State, Obesity_Rate, Obesity_Rank, Everyday, Former, Never, Somedays)
 ```
 <p float="left">
-  <img src="images/kmeans_dots.jpeg" width="500" />
-  <img src="/images/kmeansclusters.jpeg" width="500" /> 
+  <img src="images/kmeans_dots.jpeg" width="400" />
+  <img src="/images/kmeansclusters.jpeg" width="400" /> 
 </p>
 
 The "low" obesity rank sits in the top right corner with a high percentage of non-smokers and low percentage of everyday smokers. 
