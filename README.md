@@ -38,4 +38,9 @@ Based on the data, a higher percentage of former smokers leads to a lower percen
 
 I then began to think about how tobacco use effects smoking rates by region. I created subsets of the data based off regions of the United States:
 
+![](images/national_obesity_rates.jpeg)
+
 ![](images/everyday_smokers.jpeg)
+
+
+For each region smoking rates are going down, and obesity rates are rising. This counters the hypothesis that smoking leads to weight loss. Perhaps these trends are correlated, however the relationship is much more complicated than initally observed.According to the organization Trust for America's Health, Obesity Rates have been constantly rising in the U.S and have doubled since 1980.
