@@ -54,7 +54,7 @@ However, from 2005-2010, there is a positive correlation between percentage of e
 
 Additionally, obesity rates are rising consistently every year, while smoking rates are declining every year. 
 
-#K-Means Clustering
+## K-Means Clustering
 Initially clustering seemed to not be a very effective technique, because the data is very linear. However, I realized I could sort the data effectively into different categories such as Region and Obesity Rank. I defined these factor variables manually. To create a ranking for obesity ranks, I equally seperated the values of obesity into 3 types: Low, Medium, and High. 
 
 In order to create a region variable, I had to manually define every state as Western, Eastern, Midwestern, Southern, or U.S Territory. I chose these classification regions because I thought they would have similar attributes. 
