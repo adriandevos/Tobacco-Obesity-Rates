@@ -123,3 +123,5 @@ tobacco <- data.frame(Year, Region, State,  Obesity_Rate, Obesity_Rank, Everyday
 </p>
 </details>
 ``` 
+I first wanted to see if former smoking rates affected obesity rates. My initial hypothesis was that previously smoking would lead to obesity. I explored the data visually.
+
