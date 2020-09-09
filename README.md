@@ -31,6 +31,11 @@ tobacco <- data.frame(Year, Region, State,  Obesity_Rate, Obesity_Rank, Everyday
 ```
 
 I first wanted to see if former smoking rates affected obesity rates. My initial hypothesis was that previously smoking would lead to obesity. I explored the data visually.
+
 ![](images/yearly%20plots.jpeg)
 
 Based on the data, a higher percentage of former smokers leads to a lower percentage of obesity rates. This is the opposite of what I expected when I initally began the study. This supports the hypothesis that tobacco use does prevent weight gain. A conclusion could be based just off of these graphs. However, I wanted to explore the data more.
+
+I then began to think about how tobacco use effects smoking rates by region. I created subsets of the data based off regions of the United States:
+
+![](images/regional.jpeg)
