@@ -116,9 +116,10 @@ loocv<- knn.cv(train=tobacco.train, cl=tobacco.trainLabels, k=21, prob=FALSE, us
 ```
 Unfortunately, the LOOCV method classifies most observations as having a "medium" obesity rate, with a very high error rate regardless of choice of k. This is most likely because most of the data numbers are very close together and the algorithm has a hard time differentiating between them. This proved to not be an effective model.
 
-![](/images/knncluster_histogram.jpeg)
-
-![](/images/loocv_error_rates.jpeg)
+<p float="left">
+  <img src="images/knncluster_histogram.jpeg" width="431" />
+  <img src="/images/loocv_error_rates.jpeg" width="431" /> 
+</p>
 
 ## Conclusion
 After my studies, I can conclude that tobacco use is a factor in increasing obesity rates, however there are many complex causes of increasing obesity rates as well. I tested my original hypothesis that higher percentage of former smokers would lead to higher obesity rates, however I rejected it. 
